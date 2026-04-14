@@ -3,8 +3,6 @@ import db, { UPLOADS_DIR } from "@/lib/db";
 import path from "path";
 import fs from "fs";
 
-export const config = { api: { bodyParser: false } };
-
 export async function POST(req: NextRequest) {
   const formData = await req.formData();
   const name = (formData.get("student_name") as string)?.trim();
