@@ -1,8 +1,14 @@
-import { neon } from "@neondatabase/serverless";
+import { neon, NeonQueryFunction } from "@neondatabase/serverless";
 
-const sql = neon(process.env.DATABASE_URL!);
+let _sql: NeonQueryFunction<false, false> | null = null;
+
+function getDb() {
+  if (!_sql) _sql = neon(process.env.DATABASE_URL!);
+  return _sql;
+}
 
 export async function initDb() {
+  const sql = getDb();
   await sql`
     CREATE TABLE IF NOT EXISTS submissions (
       id SERIAL PRIMARY KEY,
@@ -15,4 +21,6 @@ export async function initDb() {
   `;
 }
 
-export default sql;
+export default function sql() {
+  return getDb();
+}

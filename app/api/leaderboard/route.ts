@@ -3,7 +3,7 @@ import sql, { initDb } from "@/lib/db";
 
 export async function GET() {
   await initDb();
-  const rows = await sql`
+  const rows = await sql()`
     SELECT student_name, public_score, private_score, submitted_at
     FROM submissions s1
     WHERE id = (

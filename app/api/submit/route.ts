@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
   const blob = await put(filename, file, { access: "public" });
 
   await initDb();
-  await sql`INSERT INTO submissions (student_name, file_url, submitted_at) VALUES (${name}, ${blob.url}, ${timestamp})`;
+  await sql()`INSERT INTO submissions (student_name, file_url, submitted_at) VALUES (${name}, ${blob.url}, ${timestamp})`;
 
   return NextResponse.json({ message: "Submission received", submitted_at: timestamp });
 }
