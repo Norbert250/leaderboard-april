@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
-import db from "@/lib/db";
+import sql, { initDb } from "@/lib/db";
 
 export async function GET() {
-  const rows = db.prepare("SELECT * FROM submissions ORDER BY submitted_at DESC").all();
+  await initDb();
+  const rows = await sql`SELECT * FROM submissions ORDER BY submitted_at DESC`;
   return NextResponse.json(rows);
 }

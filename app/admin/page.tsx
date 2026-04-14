@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 type Submission = {
   id: number;
   student_name: string;
-  filename: string | null;
+  file_url: string | null;
   submitted_at: string;
   public_score: number | null;
   private_score: number | null;
@@ -118,8 +118,8 @@ export default function AdminPage() {
                     <td className="px-4 py-3 text-slate-500">{r.id}</td>
                     <td className="px-4 py-3 font-medium">{r.student_name}</td>
                     <td className="px-4 py-3">
-                      {r.filename
-                        ? <a href={`/api/uploads/${r.filename}`} className="text-indigo-400 hover:underline text-xs" target="_blank">📄 download</a>
+                      {r.file_url
+                        ? <a href={r.file_url} className="text-indigo-400 hover:underline text-xs" target="_blank">📄 download</a>
                         : <span className="text-slate-600">—</span>}
                     </td>
                     <td className="px-4 py-3 text-slate-500 text-xs">{r.submitted_at}</td>

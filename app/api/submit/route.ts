@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import db, { UPLOADS_DIR } from "@/lib/db";
-import path from "path";
-import fs from "fs";
+import { put } from "@vercel/blob";
+import sql, { initDb } from "@/lib/db";
 
 export async function POST(req: NextRequest) {
   const formData = await req.formData();
@@ -16,12 +15,10 @@ export async function POST(req: NextRequest) {
   const safeName = name.replace(/\s+/g, "_");
   const filename = `${safeName}_${timestamp.replace(" ", "T").replace(/:/g, "-")}.csv`;
 
-  const buffer = Buffer.from(await file.arrayBuffer());
-  fs.writeFileSync(path.join(UPLOADS_DIR, filename), buffer);
+  const blob = await put(filename, file, { access: "public" });
 
-  db.prepare(
-    "INSERT INTO submissions (student_name, filename, submitted_at) VALUES (?, ?, ?)"
-  ).run(name, filename, timestamp);
+  await initDb();
+  await sql`INSERT INTO submissions (student_name, file_url, submitted_at) VALUES (${name}, ${blob.url}, ${timestamp})`;
 
   return NextResponse.json({ message: "Submission received", submitted_at: timestamp });
 }
